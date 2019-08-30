@@ -153,43 +153,27 @@ A few house-keeping tasks are necessary to prepare the OKD deployment.
 
 Now, you are ready to deploy OKD environment.
 
-1. Make sure you are login as `root` user in your terminal window.
-
-1. Set parameters for running the automation script.
-
-    * set variable `DOMAIN` used to access the cluster
-
-        ```
-        export DOMAIN=<public ip address>.nip.io
-        ```
-
-        For example, `export DOMAIN=169.54.241.206.nip.io`.
-
-    * set variable `USERNAME` used to login to OpenShift console
-
-        ```
-        export USERNAME=okdadmin
-        ```
-
-    * set variable `PASSWORD` for the user `okdadmin`
-
-        ```
-        export PASSWORD=<password>
-        ```
-
-    * set variable `INTERACTIVE` for the user `okdadmin`
-
-        ```
-        export INTERACTIVE=false
-        ```
-
 1. Deploy OKD v3.11
 
     ```
     ./install-openshift.sh
     ```
 
-1. When the automation script starts, it first displays all parameters used to execution. Below are sample contents. If your deployment failed for any reason, you may review its contents at the begining of the script log.
+1. The installation script collects couple of information before the OKD deployment starts.
+
+    * `Domain to us` - You may accept the default or replace `nip.io` with the domain of your virtual server, for example `169.54.241.194.zhang-llc.cloud`.
+
+    * `Username: (root)` - You may accept the default or enter a different username, for example `okdadmin`.
+
+    * `Password: (password)` - The default is `password`. You are setting the password for the username above.
+
+    * `OpenShift Version: (3.11)` - Accept the default.
+
+    * `IP: (169.54.241.194)` - Accept the default. This is the public IP address of your virtual server.
+
+    * `API Port: (8443)` - Accept the default. Port `8443` is used to access OKD console.
+
+    * `Do you wish to enable HTTPS with Let's Encrypt?` - This feature works in certain circumstances. Make your selection.
 
     ```
     ******
@@ -202,7 +186,7 @@ Now, you are ready to deploy OKD environment.
     ******
     ```
 
-1. The deployment starts the ansible playbook and may take a while to complete. It's good time for a coffee break.
+1. The deployment starts the ansible playbook and takes about 20-30 minutes to complete.
 
 1. When the deployment completes successfully, you should see similar information below.
 
@@ -210,7 +194,7 @@ Now, you are ready to deploy OKD environment.
     ******
     * Your console is https://console.169.54.241.206.nip.io:8443
     * Your username is okdadmin 
-    * Your password is password
+    * Your password is Tivoli12 
     *
     * Login using:
     *
@@ -240,7 +224,7 @@ Now, you are ready to deploy OKD environment.
 
     ```
 
-1. Take a note of your console url, for example `https://console.169.54.241.206.nip.io:8443`. You'll need the link for steps below.
+1. Take a note of your console url, for example `https://console.169.54.241.206.nip.io:8443`. You'll need the link for later.
 
 
 ## Verification
@@ -338,10 +322,6 @@ Now, your OKD/OpenShift environment is deployed and verified. This section shows
 
     > Note, don't click the `Deployment Config my-node-app, #1` link.
 
-    ![Virtual-Server-List](documents/images/okd-app-deploy.png)
-
-1. It can take a minute or two for the application deployment to complete. Eventually, the pod will be in `Running` state.
-
     ![Virtual-Server-List](documents/images/okd-app-detail.png)
 
 1. Click the link on the page to access your application. The link is displayed in couple of places shown above.
@@ -349,12 +329,6 @@ Now, your OKD/OpenShift environment is deployed and verified. This section shows
     ![Virtual-Server-List](documents/images/okd-app-test.png)
 
 1. With a few clicks, you have successfully deployed a sample Node.js application to your OKD/OpenShift environment running in IBM Cloud.
-
-
-## Reference
-
-OKD - https://www.okd.io/
-OpenShift - https://www.openshift.com/
 
 
 ## Acknowledgement
