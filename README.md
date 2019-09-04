@@ -36,9 +36,14 @@ MiniShift and CDK are other alternatives to have a local OpenShift environment. 
 * This feature doesn't work with OpenShift CLI for now.
 
 
-## Install Terraform
+## Setup Terraform
 
 To use terraform to manage IBM Cloud, it is necessary to install Terraform and the terraform-provider-ibm binaries.
+
+If you already setup Terraform environment, you skip the related sections.
+
+
+### Install Terraform
 
 Terraform is 'infrastructure as code' automation software by HashiCorp. It allows users to define (clloud) infrastructure in a high-level scripting language, which can be executed to build the infrastructure on the desired cloud platform.
 
@@ -80,7 +85,7 @@ At the time of this writing, Terraform v0.11.x is supported for IBM Cloud. Terra
     ```
 
 
-## Install IBM Terraform Provider
+### Install IBM Terraform Provider
 
 To support a multi-cloud approach, Terraform works with providers. A provider is responsible for understanding API interactions and exposing resources. In this section, you will download and configure the IBM Cloud provider.
 
@@ -112,7 +117,7 @@ To support a multi-cloud approach, Terraform works with providers. A provider is
     ```
 
 
-## Clone the Repo
+### Clone the Repo
 
 1. Navigate to `/tmp` folder.
 
@@ -131,7 +136,7 @@ To support a multi-cloud approach, Terraform works with providers. A provider is
 1. Open file `terraform.tfvars` in your preferred file editor.
 
 
-## Configure Terraform for IBM Cloud
+### Configure Terraform for IBM Cloud
 
 Terraform communicates with the IBM Cloud via REST API. You must provide minimal connection information for Terraform to communicate with IBM Cloud.
 
@@ -232,7 +237,10 @@ Instructions are provided to providsion Virtual Server instance in IBM Cloud via
     > **NOTE: don't execute command `terraform destroy` now.**
 
 
-## Collect Information of the Virtual Server Instance
+## Deploy OKD
+
+
+### Collect Information of the Virtual Server Instance
 
 It may take a few minutes for your virtual server provisioning to be completed. A few information from your virtual server instance should be collected before deploying OKD.
 
@@ -261,7 +269,7 @@ It may take a few minutes for your virtual server provisioning to be completed. 
     ![Virtual-Server-List](documents/images/vsi-password.png)
 
 
-## Prepare OKD v3.11 Deployment
+### Prepare OKD v3.11 Deployment
 
 A few house-keeping tasks are necessary to prepare the OKD deployment.
 
@@ -312,7 +320,7 @@ A few house-keeping tasks are necessary to prepare the OKD deployment.
     ```
 
 
-## Deploy OKD v3.11
+### Deploy OKD v3.11
 
 Now, you are ready to deploy OKD environment.
 
