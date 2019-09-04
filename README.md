@@ -62,7 +62,7 @@ At the time of this writing, Terraform v0.11.x is supported for IBM Cloud. Terra
 
 1. Download `Terraform v0.11.12` at `https://releases.hashicorp.com/terraform/0.11.12/` and place the downloaded file to the new folder.
 
-1. Unpack the zip file.
+1. Unpack the zip file to the new folder.
 
 1. Move file `terraform` to `/usr/local/bin`.
 
@@ -92,7 +92,7 @@ To support a multi-cloud approach, Terraform works with providers. A provider is
 
 1. Download the latest version of the `terraform-provider-ibm binary` at `https://github.com/IBM-Cloud/terraform-provider-ibm/releases`.
 
-1. Unpack the zip file.
+1. Unpack the zip file to `/tmp/terraform`.
 
 1. Move file `terraform-provider-ibm` to `/usr/local/bin`.
 
@@ -200,7 +200,7 @@ Instructions are provided to providsion Virtual Server instance in IBM Cloud via
 1. Provision a `Virtual Server` instance in IBM Cloud.
 
     ```
-    terraform
+    terraform apply
     ```
 
 1. When prompted `Do you want to perform these actions?`, reply `yes`.
@@ -230,15 +230,6 @@ Instructions are provided to providsion Virtual Server instance in IBM Cloud via
 1. Command `terraform destroy` can remove your virtual server instance when you no longer need it.
 
     > **NOTE: don't execute command `terraform destroy` now.**
-
-
-## Verify your Virtual Server Instance
-
-1. Login to `IBM Cloud console` at `https://cloud.ibm.com`.
-
-1. Navigate to `Devices` at `https://cloud.ibm.com/classic/devices`.
-
-1. The new virtual server instance should show up on the list.
 
 
 ## Collect Information of the Virtual Server Instance
