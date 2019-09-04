@@ -7,7 +7,7 @@ OpenShift Enterprise is a product offered and supported by Red Hat.
 
 This repo introduces an efficient and economic alternative to host an OKD/OpenShift v3.11 environment in IBM Cloud (SoftLayer). The procedure can be applied to a local machine if your machine had enough resources to host an OKD environment. 
 
-This repository is a set of scripts that will allow you easily install the latest version (3.11) of OKD in a single node fashion.  What that means is that all of the services required for OKD to function (master, node, etcd, etc.) will all be installed on a single host.  
+This repository is a set of scripts that will allow you easily install the latest version (3.11) of OKD in a single node fashion. All of the services required for OKD to function (master, node, etcd, etc.) will all be installed on a single host.  
 
 A single node OKD/OpenShift environment is intended for development, testing and education purpose. A single node, fully functioning OKD environment running in IBM Cloud can cost as low as only 25 cents per hour.
 
