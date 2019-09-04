@@ -117,6 +117,8 @@ To support a multi-cloud approach, Terraform works with providers. A provider is
     ```
 
 
+## Configure Terraform
+
 ### Clone the Repo
 
 1. Navigate to `/tmp` folder.
