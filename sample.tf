@@ -21,7 +21,7 @@ data "ibm_security_group" "allow_ssh" {
 resource "ibm_compute_vm_instance" "vm1" {
   hostname             = "vm1"
   domain               = "example.com"
-  os_reference_code    = "CENTOS_7_64_LAMP"
+  os_reference_code    = "CENTOS_7_64"
   datacenter           = "dal06"
   network_speed        = 100
   hourly_billing       = true
