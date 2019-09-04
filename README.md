@@ -16,6 +16,14 @@ MiniShift and CDK are other alternatives to have a local OpenShift environment. 
 
 ## Pre-requisites
 
+* Terraform
+
+* IBM Cloud IaaS account
+
+* IBM Cloud Infrastructure API key
+
+* IaaS permissions to create and deploy servers, configure network interfaces
+
 * A clean CentOS system
     * the procedure installs all necesary tools and packages including Ansible, container runtime, etc.
     * The procedure in the repo is intended for CentOS v7.x
@@ -28,45 +36,209 @@ MiniShift and CDK are other alternatives to have a local OpenShift environment. 
 * This feature doesn't work with OpenShift CLI for now.
 
 
+## Install Terraform
+
+To use terraform to manage IBM Cloud, it is necessary to install Terraform and the terraform-provider-ibm binaries.
+
+Terraform is 'infrastructure as code' automation software by HashiCorp. It allows users to define (clloud) infrastructure in a high-level scripting language, which can be executed to build the infrastructure on the desired cloud platform.
+
+Terraform is a tool for building cloud environments, the focus was IaaS, but it supports any service (PaaS or FaaS) that can be configured by an API , so includes database services, DNS, CDNs and many other resources. Terraform is open-source, its developer Hashicorp also offers a proprietry solution, though by itself the open-source solution offers a lot of value in automating environment builds using the idea of ‘infrastructure as code’, versioning and managing infrastructure in the same way that developers manage code. 
+
+![Terraform](documents/images/terraform.png)
+
+At the time of this writing, Terraform v0.11.x is supported for IBM Cloud. Terraform v0.11.12 is used to develop this repo. To install Terraform v0.11.12,
+
+1. Create a temporary folder on your local machine.
+
+    ```
+    mkdir /tmp/terraform
+    ```
+
+1. Navigate to the new folder.
+
+    ```
+    cd /tmp/terraform
+    ```
+
+1. Download `Terraform v0.11.12` at `https://releases.hashicorp.com/terraform/0.11.12/` and place the downloaded file to the new folder.
+
+1. Unpack the zip file.
+
+1. Move file `terraform` to `/usr/local/bin`.
+
+    ```
+    mv /tmp/terraform/terraform  /usr/local/bin
+    ```
+
+1. verify the Terraform installation.
+
+    ```
+    terraform
+    
+    Usage: terraform [-version] [-help] <command> [args]
+    The available commands for execution are listed below. The most common, useful commands are shown first,followed by less common or more advanced commands. If you're just getting started with Terraform, stick with the common commands. For the other commands, please read the help and docs before usage.  
+    ```
+
+
+## Install IBM Terraform Provider
+
+To support a multi-cloud approach, Terraform works with providers. A provider is responsible for understanding API interactions and exposing resources. In this section, you will download and configure the IBM Cloud provider.
+
+1. Navigate to the new folder created in the previous section.
+
+    ```
+    cd /tmp/terraform
+    ```
+
+1. Download the latest version of the `terraform-provider-ibm binary` at `https://github.com/IBM-Cloud/terraform-provider-ibm/releases`.
+
+1. Unpack the zip file.
+
+1. Move file `terraform-provider-ibm` to `/usr/local/bin`.
+
+    ```
+    mv /tmp/terraform/terraform-provider-ibm_v0.18.0  /usr/local/bin/terraform-provider-ibm
+    ```
+
+1. verify the `terraform-provider-ibm` installation.
+
+    ```
+    terraform-provider-ibm
+    
+    2019/09/04 14:56:27 IBM Cloud Provider version 0.17.2  
+    This binary is a plugin. These are not meant to be executed directly.
+    Please execute the program that consumes these plugins, which will
+    load any plugins automatically
+    ```
+
+
+## Clone the Repo
+
+1. Navigate to `/tmp` folder.
+
+1. Clone the repo.
+
+    ```
+    git clone https://github.com/lee-zhg/install-OKD-centos7-ibmcloud/tree/master
+
+    cd  install-OKD-centos7-ibmcloud
+    ```
+1. Create file `terraform.tfvars`
+
+    ```
+    cp  terraform.sample.tfvars  terraform.tfvars
+    ```
+1. Open file `terraform.tfvars` in your preferred file editor.
+
+
+## Configure Terraform for IBM Cloud
+
+Terraform communicates with the IBM Cloud via REST API. You must provide minimal connection information for Terraform to communicate with IBM Cloud.
+
+* IBM IaaS Infrastructure full username
+* IBM IaaS Infrastructure API key
+* IBM Cloud API Key
+
+1. login to `IBM SoftLayer Console` at `https://control.softlayer.com/`.
+
+1. navigate to `Edit User Profile` at `https://control.softlayer.com/account/user/profile`.
+
+1. Scroll down to the `API Access Information` section.
+
+1. Assign the value of the `API Username` to `iaas_username` in the file `terraform.tfvars`. For example, `iaas_username = "SL######"`.
+
+1. Assign the value of the `Authentication Key` to `ibmcloud_iaas_api_key` in the file `terraform.tfvars`. For example, `ibmcloud_iaas_api_key="AAAAAAAAAAAAAAAA##########"`.
+
+1. Login to `IBM Cloud Console` at https://cloud.ibm.com.
+
+1. Navigate to `IBM Cloud API Keys` at https://cloud.ibm.com/iam/apikeys.
+
+1. Select `Create an IBM Cloud API key` and create a new API key.
+
+1. Assign the new API key to `ibmcloud_api_key` in the file `terraform.tfvars`. For example, `ibmcloud_api_key="AAAAAAAAAAAAAAAA##########"`.
+
+1. Save the file `terraform.tfvars`.
+
+
 ## Provision Virtual Server in IBM Cloud (SoftLayer)
 
-You need a clean machine with CentOS Linux for OKD deployment. To provision a virtual server instance in IBM Cloud (SoftLayer),
+As the size on complexity of cloud hosted applications grows’, manually buiding cloud infrastructure via a UI can become slow and error-prone. It is also not repeatable, limiting the ability to build development and test environments that match what will be used in production. 
 
-1. Login to [IBM Cloud console](https://cloud.ibm.com).
+Instructions are provided to providsion Virtual Server instance in IBM Cloud via Terraform in this section. To provision a virtual server instance in IBM Cloud (SoftLayer),
 
-1. Select `Catalog` on the top.
+1. Open a `Terminal` window.
 
-1. Select `Compute` on the left.
+1. Navigate to the root folder of your repo foldser.
 
-1. Select `Virtual Server` in the section `Infrastructure`.
+    ```
+    cd  /tmp/install-OKD-centos7-ibmcloud
+    ```
 
-    ![Virtual-Server](documents/images/virtualserver.png)
+1. Initialize Terraform IBM plugin.
 
-1. Choose a machine category. A `Public Virtual Server` instance should work fine for the most of cases. But, it's your option to choose.
+    ```
+    terraform init
 
-1. Click `Continue`.
+    Terraform has been successfully initialized!
+    ```
 
-1. Select machine settings. Feel free to choose your settings per your requirements. Settings below are what have been verified working.
+1. Check if any change is required for your infrastructure. The command below compares the desired state and actual state of your infrastructure, and identify the differences.
 
-    * `Type of virtual server`: `Public`
-    * `Hostname`: a unique hostname
-    * `Domain`: if the default domain name contains upper case, you may consider to change all to lower case
-    * `Location`: based on your location
-    * `Popular profiles`: `Memory M1.4x32`
-    * `Image`: `CentOS 7.x - LAMP (64 bit)` 
-    * `Attached storage disks`: 100GB
-    * `Private security group`: select all 5 options
-    * `Public security group`: select all 5 options.
+    ```
+    terraform plan
+    ```
 
-    > **Note: `CentOS 7.x - LAMP (64 bit)` must be the Linux OS for the deployment. The deployment automation in the repo is only intended for `CentOS 7.x - LAMP (64 bit)`.**
+1. At the end of the output of command `terraform plan`, if everything goes well, you should see
 
-    ![Virtual-Server-Create-01](documents/images/create-vsi-01.png)
+    ```
 
-    ![Virtual-Server-Create-02](documents/images/create-vsi-02.png)
+    Plan: 1 to add, 0 to change, 0 to destroy.
+    ```
 
-1. Select the checkbox `I read and agree to the following Third-Party Service Agreements: 3rd Party Software Terms CentOS`.
+1. If you envountered any error, you should resolve the problem before moving to the next step.
 
-1. `Create`.
+1. Provision a `Virtual Server` instance in IBM Cloud.
+
+    ```
+    terraform
+    ```
+
+1. When prompted `Do you want to perform these actions?`, reply `yes`.
+
+1. The provisioning may take a while. It's good time for a coffee break.
+
+1. Upon the provision completion, execute
+
+    ```
+    terraform show
+    ```
+
+    The command reads the `terraform.tfstate` file and displays information Terraform has recorded about the virtual server. 
+
+1. Execute command
+
+    ```
+    terraform plan
+    ```
+
+    The last line of the command output should show
+
+    ```
+    Plan: 0 to add, 0 to change, 0 to destroy.
+    ```
+
+1. Command `terraform destroy` can remove your virtual server instance when you no longer need it.
+
+    > **NOTE: don't execute command `terraform destroy` now.**
+
+
+## Verify your Virtual Server Instance
+
+1. Login to `IBM Cloud console` at `https://cloud.ibm.com`.
+
+1. Navigate to `Devices` at `https://cloud.ibm.com/classic/devices`.
+
+1. The new virtual server instance should show up on the list.
 
 
 ## Collect Information of the Virtual Server Instance
