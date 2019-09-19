@@ -18,6 +18,13 @@ data "ibm_security_group" "allow_ssh" {
     name = "allow_ssh"
 }
 
+# Create a new ssh key 
+resource "ibm_compute_ssh_key" "ssh_key_ose" {
+  label      = "${var.ssh-label}"
+  notes      = "SSH key for deploying OSE using Terraform"
+  public_key = "${file(var.public_ssh_key)}"
+}
+
 resource "ibm_compute_vm_instance" "vm1" {
   hostname             = "vm1"
   domain               = "example.com"
@@ -30,5 +37,6 @@ resource "ibm_compute_vm_instance" "vm1" {
   memory               = 32768
   disks                = [100]
   local_disk           = false
+  ssh_key_ids = ["${ibm_compute_ssh_key.ssh_key_ose.id}"]
   public_security_group_ids = ["${data.ibm_security_group.allow_all.id}", "${data.ibm_security_group.allow_http.id}", "${data.ibm_security_group.allow_https.id}", "${data.ibm_security_group.allow_outbound.id}", "${data.ibm_security_group.allow_ssh.id}"]
 }

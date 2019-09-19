@@ -119,6 +119,7 @@ To support a multi-cloud approach, Terraform works with providers. A provider is
 
 ## Configure Terraform
 
+
 ### Clone the Repo
 
 1. Navigate to `/tmp` folder.
@@ -138,6 +139,17 @@ To support a multi-cloud approach, Terraform works with providers. A provider is
 1. Open file `terraform.tfvars` in your preferred file editor.
 
 
+### Generate SSH Keys
+
+With proper SSH key configuration, you can access your `Virtual Server` instance in `IBM Cloud` without userid and password, after it's provisioned.
+
+You pass the SSH key information to the Terraform configuration in the next section.
+
+If you already have SSH private and public key pair, by default, the public key and private key can be found in the directory `~/.ssh`. For example, `~/.ssh/id_rsa.pub` and `~/.ssh/id_rsa`.
+
+To generate the private and public key pair, follow the instruction [here](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/). If the private and public key pair is not saved in the default folder `~/.ssh`, the file `variables.tf` must be modified accordingly. 
+
+
 ### Configure Terraform for IBM Cloud
 
 Terraform communicates with the IBM Cloud via REST API. You must provide minimal connection information for Terraform to communicate with IBM Cloud.
@@ -146,15 +158,29 @@ Terraform communicates with the IBM Cloud via REST API. You must provide minimal
 * IBM IaaS Infrastructure API key
 * IBM Cloud API Key
 
+1. Rename file `variables.sample.tf` to `variables.tf`.
+
 1. login to `IBM SoftLayer Console` at `https://control.softlayer.com/`.
 
 1. navigate to `Edit User Profile` at `https://control.softlayer.com/account/user/profile`.
 
 1. Scroll down to the `API Access Information` section.
 
-1. Assign the value of the `API Username` to `iaas_username` in the file `terraform.tfvars`. For example, `iaas_username = "SL######"`.
+1. Assign the value of the `API Username` to `iaas_username` in the file `variables.tf`. For example, 
 
-1. Assign the value of the `Authentication Key` to `ibmcloud_iaas_api_key` in the file `terraform.tfvars`. For example, `ibmcloud_iaas_api_key="AAAAAAAAAAAAAAAA##########"`.
+    ```
+    variable "ibm_sl_username"{
+      default     = "SL########"
+    }
+    ```
+
+1. Assign the value of the `Authentication Key` to `ibmcloud_iaas_api_key` in the file `variables.tf`. For example, 
+
+    ```
+    variable "ibm_sl_api_key"{
+      default     = "AAAAAAAAAAAAAAAA##########"
+    }
+    ```
 
 1. Login to `IBM Cloud Console` at https://cloud.ibm.com.
 
@@ -162,16 +188,29 @@ Terraform communicates with the IBM Cloud via REST API. You must provide minimal
 
 1. Select `Create an IBM Cloud API key` and create a new API key.
 
-1. Assign the new API key to `ibmcloud_api_key` in the file `terraform.tfvars`. For example, `ibmcloud_api_key="AAAAAAAAAAAAAAAA##########"`.
+1. Assign the new API key to `ibmcloud_api_key` in the file `variables.tf`. For example, 
 
-1. Save the file `terraform.tfvars`.
+    ```
+    variable "ibmcloud_api_key"{
+      default     = "AAAAAAAAAAAAAAAA##########"
+    }
+
+1. Save the file `variables.tf`.
+
+> Note, if the private and public key pair is not in the default folder `~/.ssh` or it has different file name, the file `variables.tf` must be modified accordingly.
+
+```
+variable "public_ssh_key" {
+  default     = "~/.ssh/id_rsa.pub"
+}
+```
 
 
 ## Provision Virtual Server in IBM Cloud (SoftLayer)
 
 As the size on complexity of cloud hosted applications grows’, manually buiding cloud infrastructure via a UI can become slow and error-prone. It is also not repeatable, limiting the ability to build development and test environments that match what will be used in production. 
 
-Instructions are provided to providsion Virtual Server instance in IBM Cloud via Terraform in this section. To provision a virtual server instance in IBM Cloud (SoftLayer),
+To provision a virtual server instance in IBM Cloud (SoftLayer) via Terraform,
 
 1. Open a `Terminal` window.
 
