@@ -127,16 +127,16 @@ To support a multi-cloud approach, Terraform works with providers. A provider is
 1. Clone the repo.
 
     ```
-    git clone https://github.com/lee-zhg/install-OKD-centos7-ibmcloud/tree/master
+    git clone https://github.com/lee-zhg/install-OKD-centos7-ibmcloud.git
 
     cd  install-OKD-centos7-ibmcloud
     ```
 1. Create file `terraform.tfvars`
 
     ```
-    cp  terraform.sample.tfvars  terraform.tfvars
+    mv  variables.sample.tf  variables.tf
     ```
-1. Open file `terraform.tfvars` in your preferred file editor.
+1. Open file `variables.tf` in your preferred file editor.
 
 
 ### Generate SSH Keys
@@ -277,13 +277,29 @@ To provision a virtual server instance in IBM Cloud (SoftLayer) via Terraform,
 
     > **NOTE: don't execute command `terraform destroy` now.**
 
-
-## Deploy OKD
-
-
 ### Collect Information of the Virtual Server Instance
 
 It may take a few minutes for your virtual server provisioning to be completed. A few information from your virtual server instance should be collected before deploying OKD.
+
+
+#### Locate the public IP address of the Virtual Server Instance
+
+After the completion of your Virtual Server deployment, you only need the virtual server public IP address if you configured SSH key paire properly before and during Terraform configuration.
+
+1. In the same `terminal` window, execute command
+
+    ```
+    export VM_PUBLIC_IP = `terraform show | grep -v ipv4_address_private | grep ipv4_address`
+    ```
+1. Verify the public IP address
+
+    ```
+    echo $VM_PUBLIC_IP
+    ```
+
+1. If you have a valid public IP address for your virtual server, skip the rest of this section and move to the next section.
+
+1. If you don't have a valid public address, you may follow the alternative path in the rest of this section to locate the public IP address of your virtual server. But, very likely you may have had issue when you deployed your virtual server via the `Terraform`.
 
 1. Login to [IBM Cloud](https://cloud.ibm.com).
 
@@ -309,6 +325,8 @@ It may take a few minutes for your virtual server provisioning to be completed. 
 
     ![Virtual-Server-List](documents/images/vsi-password.png)
 
+
+## Deploy OKD
 
 ### Prepare OKD v3.11 Deployment
 
