@@ -281,9 +281,6 @@ To provision a virtual server instance in IBM Cloud (SoftLayer) via Terraform,
 
 It may take a few minutes for your virtual server provisioning to be completed. A few information from your virtual server instance should be collected before deploying OKD.
 
-
-#### Locate the public IP address of the Virtual Server Instance
-
 After the completion of your Virtual Server deployment, you only need the virtual server public IP address if you configured SSH key paire properly before and during Terraform configuration.
 
 1. In the same `terminal` window, execute command
